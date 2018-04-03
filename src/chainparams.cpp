@@ -76,11 +76,11 @@ public:
         consensus.nMasternodePaymentsStartBlock = 240;
         consensus.nInstantSendKeepLock = 24;
         consensus.nBudgetPaymentsStartBlock = 300; // actual historical value
-        consensus.nBudgetPaymentsCycleBlocks = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
-        consensus.nBudgetPaymentsWindowBlocks = 100;
-        consensus.nBudgetProposalEstablishingTime = 60*60*24;
+        consensus.nBudgetPaymentsCycleBlocks = 24; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        consensus.nBudgetPaymentsWindowBlocks = 10;
+        consensus.nBudgetProposalEstablishingTime = 60*20;
         consensus.nSuperblockStartBlock = 400; // The block at which 12.1 goes live (end of final 12.0 budget cycle)
-        consensus.nSuperblockCycle = 16616; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
+        consensus.nSuperblockCycle = 24; // ~(60*24*30)/2.6, actual number of blocks per month is 200700 / 12 = 16725
         consensus.nGovernanceMinQuorum = 10;
         consensus.nGovernanceFilterElements = 20000;
         consensus.nMasternodeMinimumConfirmations = 15;
@@ -88,8 +88,8 @@ public:
         consensus.nMajorityRejectBlockOutdated = 950;
         consensus.nMajorityWindow = 1000;
         consensus.BIP34Height = 0;
-        consensus.BIP34Hash = uint256S("0x0000006a7203672b4f38bce10a731f8b3f45b6d32e41cc55bc35bc19a73c0a11");
-        consensus.powLimit = uint256S("00000fffff000000000000000000000000000000000000000000000000000000");
+        consensus.BIP34Hash = uint256S("0x0000e3ce947b19efb6c55c80e0cccb74f4c51d2a955d4e0e6cfb7e21fa9fb3ce");
+        consensus.powLimit = uint256S("000fffff00000000000000000000000000000000000000000000000000000000");
         consensus.nPowTargetTimespan = 24 * 60 * 60; // KZCash: 1 day
         consensus.nPowTargetSpacing = 2.5 * 60; // KZCash: 2.5 minutes
         consensus.fPowAllowMinDifficultyBlocks = false;
@@ -110,22 +110,21 @@ public:
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 32-bit integer with any alignment.
          */
-        pchMessageStart[0] = 0xbd;
-        pchMessageStart[1] = 0x1b;
-        pchMessageStart[2] = 0x44;
-        pchMessageStart[3] = 0xba;
+        pchMessageStart[0] = 0xb1;
+        pchMessageStart[1] = 0x11;
+        pchMessageStart[2] = 0x41;
+        pchMessageStart[3] = 0xb1;
         vAlertPubKey = ParseHex("04ac59455a08ce22d2d759e3d4195c4c672f07684becdbfae1799db414e9149ee23ae6b06ceb67f1cad0f53d4c395d86aa2a0878170980f88dede90cea8602c8f8");
         nDefaultPort = 8277;
         nMaxTipAge = 6 * 60 * 60; // ~144 blocks behind -> 2 x fork detection time, was 24 * 60 * 60 in bitcoin
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1508499214, 197636, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1522739069, 45439, 0x1f00ffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0000006a7203672b4f38bce10a731f8b3f45b6d32e41cc55bc35bc19a73c0a11"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0000e3ce947b19efb6c55c80e0cccb74f4c51d2a955d4e0e6cfb7e21fa9fb3ce"));
         assert(genesis.hashMerkleRoot == uint256S("0x17f10beb710fcee7b507494352d278b902d028158d323b64864fa79580592f02"));
 
-
-        vSeeds.push_back(CDNSSeedData("kzcash.kz", "dnsseed.kzcash.kz"));
+        // vSeeds.push_back(CDNSSeedData("kzcash.kz", "dnsseed.kzcash.kz"));
 
         // KZCash addresses start with 'K'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,46);
@@ -153,21 +152,21 @@ public:
         strSporkPubKey = "040ca26d1e9bcedf6ed599830531862f983ce019cb91016a6eaff9999798287e47e8875373e5bb940150ab5d3e15ced0ce8d89baa0ba59fb91cfad97a0764abdac";
         strMasternodePaymentsPubKey = "045fa161841f8b4757a06f7fffa6487aaf0cbf3fb6665e48afb16c38168c859e9cf7707ceb946b47bae8ab96663666816693dc7186b8c9b380ec91c280c37631ca";
 
-        checkpointData = (CCheckpointData) {
-            boost::assign::map_list_of
-            (  1250,   uint256S("0x0000001d0090a0ad135fed43720b1d745867a15e6ee9b7d9e5d51fed98a0a13e"))
-            (  1400,   uint256S("0x00000018493f238c926a8102b7121f0834de61e0e44f9a93e69ed64475e30b8e"))
-            (  1637,   uint256S("0x000000009cf0be5faf6fdcd4f3e3a6392abee2f47c81f0189ef4643aa9463976"))
-            (  2911,   uint256S("0x000000000000b4ac6491fd56c5c2f0494c5130e58b62076bee10fb1f08ef00f8"))
-            (  4490,   uint256S("0x0000000000008f2db7249096215415313d5cbe58656f52cae24b0bcbc70573e5"))
-            (  15883,  uint256S("0x0000000000003794d5680c5534b73151a807d0ec9c563fec3dd4d9422c40f694"))
-            (  16814,  uint256S("0x0000000000003a045783c062a8f7dbacc74120a1b10b576550c25b1c93ba478c"))
-            (  17866,  uint256S("0x000000000000413546251d72ae4f813360ffa7d84f00ac989b74e2bb26b65a0e")),
-            1511408705, // * UNIX timestamp of last checkpoint block
-            26019,      // * total number of transactions between genesis and last checkpoint
-                        //   (the tx=... number in the SetBestChain debug.log lines)
-            1200        // * estimated number of transactions per day after checkpoint
-        };
+        // checkpointData = (CCheckpointData) {
+        //     boost::assign::map_list_of
+        //     (  1250,   uint256S("0x0000001d0090a0ad135fed43720b1d745867a15e6ee9b7d9e5d51fed98a0a13e"))
+        //     (  1400,   uint256S("0x00000018493f238c926a8102b7121f0834de61e0e44f9a93e69ed64475e30b8e"))
+        //     (  1637,   uint256S("0x000000009cf0be5faf6fdcd4f3e3a6392abee2f47c81f0189ef4643aa9463976"))
+        //     (  2911,   uint256S("0x000000000000b4ac6491fd56c5c2f0494c5130e58b62076bee10fb1f08ef00f8"))
+        //     (  4490,   uint256S("0x0000000000008f2db7249096215415313d5cbe58656f52cae24b0bcbc70573e5"))
+        //     (  15883,  uint256S("0x0000000000003794d5680c5534b73151a807d0ec9c563fec3dd4d9422c40f694"))
+        //     (  16814,  uint256S("0x0000000000003a045783c062a8f7dbacc74120a1b10b576550c25b1c93ba478c"))
+        //     (  17866,  uint256S("0x000000000000413546251d72ae4f813360ffa7d84f00ac989b74e2bb26b65a0e")),
+        //     1511408705, // * UNIX timestamp of last checkpoint block
+        //     26019,      // * total number of transactions between genesis and last checkpoint
+        //                 //   (the tx=... number in the SetBestChain debug.log lines)
+        //     1200        // * estimated number of transactions per day after checkpoint
+        // };
     }
 };
 static CMainParams mainParams;
